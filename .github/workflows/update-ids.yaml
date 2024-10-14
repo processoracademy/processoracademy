@@ -1,0 +1,65 @@
+name: Update IDs
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  add-id-to-md-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+
+      - name: Check for skip condition
+        id: skip_check
+        run: |
+          if git log -1 --pretty=%B | grep -q "\[skip ci\]"; then
+            echo "Skipping build due to [skip ci] commit message."
+            exit 0
+          fi
+
+      - name: Run update ids script
+        run: |
+          python ./.github/update-ids.py
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add .
+          git commit -m "Updated IDs [skip ci]" || echo "No changes to commit"
+          git push
+
+      - name: Tell server to update its content
+        run: |
+          set +x
+          if [ -z "${{ vars.SERVER_ADDRESS }}" ]; then
+            echo "Warning: SERVER_ADDRESS is not set or is empty"
+            exit 0
+          fi
+          if [ -z "${{ secrets.UPDATE_TOKEN }}" ]; then
+            echo "Warning: UPDATE_TOKEN is not set or is empty"
+            exit 0
+          fi
+
+          response=$(curl -X POST -sS -o /dev/null -w "%{http_code}" --insecure ${{ vars.SERVER_ADDRESS }}/update \
+          -H "Content-Type: text/plain" \
+          -d "${{ secrets.UPDATE_TOKEN }}" \
+          --max-time 10)
+          
+          if [[ $response == 2* ]]; then
+            echo "Token sent successfully"
+          else
+            echo "Failed to send token. HTTP status code: $response"
+            exit 1
+          fi
+          
+          if [[ $(curl -sS -o /dev/null -w "%{scheme}" --insecure ${{ vars.SERVER_ADDRESS }}) != "https" ]]; then
+            echo "Warning: Server is not using HTTPS. Communication is not encrypted."
+          fi
