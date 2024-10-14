@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+   <defs><style type="text/css"><![CDATA[
+         :root { --color: #a991f7; }
+         .filled { fill: var(--color); }
+         .stroked { fill: none; stroke: var(--color); paint-order: fill markers stroke; }
+      ]]></style></defs>
+   <path class="filled" d="m128.36 287.13 121.61 70.938 118.23-70.938v94.584l-118.23 70.938-121.61-70.938z"/>
+   <rect class="filled" x="67.56" y="222.95" width="13.512" height="70.938"/>
+   <circle class="filled" cx="74.316" cy="307.4" r="16.89"/>
+   <path class="stroked" style="stroke-width: 28;" d="M 250,75 453.63,196 250,317 46.4,196 Z"/>
+   <path class="stroked" style="stroke-width: 56;" transform="matrix(.50536 0 0 .50536 123.58 96.62)" d="M 250,75 453.63,196 250,317 46.4,196 Z"/>
+</svg>
