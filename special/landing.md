@@ -1,3 +1,4 @@
+<!-- ID: UxsdbI -->
 <div class="grow hero bg-base-200 h-full">
   <div class="hero-content text-center">
     <div class="px-4">
